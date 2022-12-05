@@ -16,13 +16,10 @@ main :: IO ()
 -- main = getArgs >>= parse >>= putStr . tac
 main = do
     args <- getArgs
-    inputString <- Data.Text.IO.readFile "txt.txt"
-    case parse fullParser "" inputString  of
-        Left e -> print ("parse error" ++ show e)
-        Right y -> print (sum y)
-    -- sum p
-    --p <- parseTest (many (pUri) :: Parser [Int]) inputString
-    --sum p
+    inputString <- Prelude.readFile "txt.txt"
+    let t = lines inputString
+    let a = sum $ map priority $ answer' t
+    print (a)
 
 firstHalf :: [Char] -> [Char]
 firstHalf input = take ((length input) `div` 2) input
@@ -30,12 +27,25 @@ firstHalf input = take ((length input) `div` 2) input
 secondHalf :: [Char] -> [Char]
 secondHalf input = drop ((length input) `div` 2) input
 
-sameInTwoElem :: [Char] -> [Char] -> [Char]
-sameInTwoElem x y = [z | z <- x, z `elem` y]
+sameInTwoElem :: [Char] -> [Char] -> Char
+sameInTwoElem x y = head [z | z <- x, z `elem` y]
+
+sameInThreeElem :: [Char] -> [Char] -> [Char] -> Char
+sameInThreeElem x y z = head [element | element <- x, element `elem` y, element `elem` z]
 
 priority :: Char -> Int
 priority x = 1 + (fromJust (elemIndex x (['a'..'z'] ++ ['A'..'Z'])))
 
+answer :: [[Char]] -> Int
+answer inputString = sum $ map priority [sameInTwoElem (firstHalf x) (secondHalf x) | x <- inputString]
+
+answer' :: [[Char]] -> [Char]
+answer' (x:y:z:[]) = [sameInThreeElem x y z]
+answer' (x:y:z:xs) = (sameInThreeElem x y z):(answer' xs)
+-- answer :: [Char] -> Int
+-- answer inputString = sum (priority `fmap` (sameInTwoElem (firstHalf inputString) (secondHalf inputString)))
+
+testString = ["vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg", "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn", "ttgJtRGJQctTZtZT", "CrZsJsPPZsGzwwsLwLmpwMDw"] :: [[Char]]
 type Parser = Parsec Void Text
 singleLetterP :: Parser Char
 singleLetterP = char 'h'
