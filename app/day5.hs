@@ -5,7 +5,7 @@ import Data.List.Split
 
 main :: IO ()
 main = do
-    inputString <- Prelude.readFile "day5.txt"
+    inputString <- Prelude.readFile "input/day5.txt"
     let movesToMake = map justInts $ map command' $ drop 10 $ lines inputString
     let answer = applyMove startingStack movesToMake
     print answer

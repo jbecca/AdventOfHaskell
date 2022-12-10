@@ -6,7 +6,7 @@ import Data.List.Split
 main :: IO ()
 
 main = do
-    inputString <- Prelude.readFile "day4.txt"
+    inputString <- Prelude.readFile "input/day4.txt"
     let t = (answer . flatList) $ lines inputString
     print t
 

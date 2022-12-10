@@ -15,7 +15,7 @@ main :: IO ()
 -- main = getArgs >>= parse >>= putStr . tac
 main = do
     args <- getArgs
-    inputString <- Data.Text.IO.readFile "txt.txt"
+    inputString <- Data.Text.IO.readFile "input/day2.txt"
     case parse fullParser "" inputString  of
         Left e -> print ("parse error" ++ show e)
         Right y -> print (sum y)

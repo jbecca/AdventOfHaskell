@@ -16,7 +16,7 @@ main :: IO ()
 -- main = getArgs >>= parse >>= putStr . tac
 main = do
     args <- getArgs
-    inputString <- Prelude.readFile "txt.txt"
+    inputString <- Prelude.readFile "input/day3.txt"
     let t = lines inputString
     let a = sum $ map priority $ answer' t
     print (a)
