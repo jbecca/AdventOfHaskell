@@ -50,3 +50,8 @@ executable day5
     import:           common-extensions, build-directives
     main-is:          app/day5.hs
     build-depends:    megaparsec, split, hlint
+
+executable day6
+    import:           common-extensions, build-directives
+    main-is:          app/day6.hs
+    build-depends:    megaparsec, split, hlint
