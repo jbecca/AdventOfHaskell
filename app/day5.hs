@@ -6,29 +6,30 @@ import Data.List.Split
 main :: IO ()
 main = do
     inputString <- Prelude.readFile "day5.txt"
-    let t = lines inputString
-    print t
+    let movesToMake = map justInts $ map command' $ drop 10 $ lines inputString
+    let answer = applyMove startingStack movesToMake
+    print answer
 
 one' :: Stack
 one' = "DTWNL" :: Stack
-
 two' :: Stack
 two' = "HPC" :: Stack
-
 three' :: Stack
 three' = "JMGDNHPW" :: Stack
-
 four' :: Stack
 four' = "LQTNSWC" :: Stack
-
 five' :: Stack
 five' = "NCHP" :: Stack
-
+six' :: Stack
 six' = "BQWMDNHT" :: Stack
+seven' :: Stack
 seven' = "LSGJRBM" :: Stack
+eight' :: Stack
 eight' = "TRBVGWNZ" :: Stack
+nine' :: Stack
 nine' = "LPNDGW" :: Stack
 
+type Move = [Int]
 type StackIndex = Int
 type Stack = String
 type Stacks = [String]
@@ -52,13 +53,27 @@ command' = splitOn " "
 justInts :: [[Char]] -> [Int]
 justInts [_,a,_,b,_,c] = [read a,read b,read c]
 
-updateStacks :: Stacks -> (StackIndex, Stack) -> Stacks
-updateStacks inputStack (n, newStack) = [if nn /= n then x else newStack | (nn, x) <- zip [1..] inputStack]
+updateStacks :: (StackIndex, Stack) -> Stacks -> Stacks
+updateStacks (n, newStack) inputStack = [if nn /= n then x else newStack | (nn, x) <- zip [1..] inputStack]
 
-move' :: Int -> StackIndex -> StackIndex -> Stacks -> Stacks
-move' n a b stacks = [newA, newB]
+move' :: Move -> Stacks -> [(StackIndex, Stack)]
+move' move stacks = [(a,newA), (b,newB)]
   where
     newA = drop n movedFrom
-    newB = (reverse (take n movedFrom)) <> movedTo
-    movedFrom = stacks !! a
-    movedTo = stacks !! b
+    -- PART 1: one crate at a time: reverse the crates
+    --newB = (reverse (take n movedFrom)) <> movedTo
+    -- PART 2: stacks moved at once: no reverse
+    newB = (take n movedFrom) <> movedTo
+    movedFrom = stacks !! (a - 1)
+    movedTo = stacks !! (b - 1)
+    n = move !! 0
+    a = move !! 1
+    b = move !! 2
+
+applyMove :: Stacks -> [Move] -> Stacks
+applyMove stacks [] = stacks
+applyMove stacks (move:moves) = applyMove (updateStacks tup2 (updateStacks tup1 stacks)) moves
+  where
+    tups = move' move stacks
+    tup1 = head tups
+    tup2 = tups !! 1
