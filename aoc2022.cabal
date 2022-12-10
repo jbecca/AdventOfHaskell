@@ -16,50 +16,37 @@ extra-doc-files:    CHANGELOG.md
 common warnings
     ghc-options: -Wall
 
--- executable aoc2022
---     import:           warnings
---     main-is:          Main.hs
---     -- other-modules:
---     -- other-extensions:
---     build-depends:    base ^>=4.17.0.0, parsec
---     hs-source-dirs:   app
---     default-language: Haskell2010
---
--- executable day2
---     import:           warnings
---     main-is:          day2.hs
---     -- other-modules:
---     -- other-extensions:
---     build-depends:    base ^>=4.17.0.0, megaparsec, text
---     hs-source-dirs:   app
---     default-language: Haskell2010
+common common-extensions
+    default-extensions: OverloadedStrings
 
--- executable day3
---     import:           warnings
---     main-is:          day3.hs
---     -- other-modules:
---     -- other-extensions:
---     default-extensions: OverloadedStrings
---     build-depends:    base ^>=4.17.0.0, megaparsec, text
---     hs-source-dirs:   app
---     default-language: Haskell2010
+common build-directives
+    build-depends:  base ^>=4.17.0.0
+    default-language: Haskell2010
+    hs-source-dirs: ., app
+    ghc-options:    -O1
+                    -Wall
+executable aoc2022
+    import:           common-extensions, build-directives
+    main-is:          app/day1.hs
+    build-depends:    base ^>=4.17.0.0, parsec
 
--- executable day4
---     import:           warnings
---     main-is:          day4.hs
---     -- other-modules:
---     -- other-extensions:
---     default-extensions: OverloadedStrings
---     build-depends:    base ^>=4.17.0.0, megaparsec, split, hlint
---     hs-source-dirs:   app
---     default-language: Haskell2010
+executable day2
+    import:           common-extensions, build-directives
+    main-is:          app/day2.hs
+    build-depends:    megaparsec, text
+
+executable day3
+    import:           common-extensions, build-directives
+    main-is:          app/day3.hs
+    build-depends:    megaparsec, text
+
+executable day4
+    import:           common-extensions, build-directives
+    main-is:          app/day4.hs
+    default-extensions: OverloadedStrings
+    build-depends:    megaparsec, split, hlint
 
 executable day5
-    import:           warnings
-    main-is:          day5.hs
-    -- other-modules:
-    -- other-extensions:
-    default-extensions: OverloadedStrings
-    build-depends:    base ^>=4.17.0.0, megaparsec, split, hlint
-    hs-source-dirs:   app
-    default-language: Haskell2010
+    import:           common-extensions, build-directives
+    main-is:          app/day5.hs
+    build-depends:    megaparsec, split, hlint
