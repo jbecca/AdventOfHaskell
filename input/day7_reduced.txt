@@ -1,0 +1,11 @@
+$ cd /
+$ ls
+dir cmwrq
+dir ftrccld
+dir mddr
+dir mthvntdd
+55644 pjts.dzh
+dir ptzsl
+dir wmqc
+$ cd cmwrq
+$ ls
