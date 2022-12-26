@@ -59,3 +59,4 @@ executable day6
 executable day7
     import:           common-extensions, build-directives
     main-is:          app/day7.hs
+    build-depends:    containers, split

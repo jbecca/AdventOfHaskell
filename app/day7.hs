@@ -6,7 +6,10 @@ import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Error
 import qualified Text.Megaparsec.Char.Lexer as L
+import qualified Data.Map as Map
 import Data.Void
+import Data.List.Split
+import Data.List (intercalate, foldl')
 
 main :: IO ()
 main = do
@@ -53,3 +56,21 @@ sc = L.space space1 empty empty
 
 lexeme :: Parser a -> Parser a
 lexeme = L.lexeme sc
+
+type Path = String
+type DirOrFileName = String
+type Size = Integer
+
+type InputMap = Map.Map Path (DirOrFileName, Size)
+
+fChangeDir :: Path -> String -> Path
+fChangeDir p ".." = intercalate "/" $ drop 2 $ splitOn "/" p
+fChangeDir p "/"    = "/"
+fChangeDir p s    = "/" <> s <> p
+itemToMap :: (Path, InputMap) -> StructuredInput -> (Path, InputMap)
+itemToMap (s, answerMap) input =
+  case input of
+    (ChangeDir dir) -> ((fChangeDir s dir), answerMap)
+    (LsDir)         -> (s, answerMap)
+    (Dir dir)       -> (s, answerMap)
+    (File size)     -> (s, Map.insert s (s, size) answerMap)
