@@ -93,6 +93,9 @@ itemToMap (Path s, answerMap) input =
 type SizeMap = Map.Map Path Size
 
 -- do another foldl' here to get a final map
-sizeOfDirectory :: (Path, [(DirOrFileName, Size)]) -> SizeMap
-sizeOfDirectory = undefined
+sizeOfDirectory :: (Path, [(DirOrFileName, Size)]) -> (Path, Size)
+sizeOfDirectory (path, lst) = (path, Size $ sum [i | (_,Size i) <- lst])
   -- where list = Map.reverse $ Map.toList inputMap
+
+-- pain keeps coming from treating files and directories as the same thing. If they are
+-- instead different, pattern matching can help when trying to sum the directory.
