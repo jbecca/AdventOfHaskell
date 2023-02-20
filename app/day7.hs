@@ -37,9 +37,7 @@ pLine =
   pDir <|>
   pFile
 
-
 pChangeDir :: Parser StructuredInput
---pChangeDir = ChangeDir <$> ("$ cd " *> many printChar)
 pChangeDir = do
   _   <- Text.Megaparsec.chunk "$ cd "
   dir <- takeWhile1P (Just "print character") isPrint
@@ -49,14 +47,12 @@ pLsDir :: Parser StructuredInput
 pLsDir = LsDir <$ "$ ls"
 
 pDir :: Parser StructuredInput
---pDir = Dir <$> ("dir " *> many letterChar)
 pDir = do
   _ <- Text.Megaparsec.chunk "dir "
   dir <- takeWhile1P (Just "print char") isPrint
   return (Dir dir)
 
 pFile :: Parser StructuredInput
---pFile = File <$> (pInteger) <*> (many (letterChar <|> punctuationChar))-- <* many printChar) -- <*> (many letterChar)
 pFile = do
   size <- pInteger
   fname <- takeWhile1P (Just "p char") isPrint
@@ -82,8 +78,8 @@ fChangeDir (Path p) s    = Path $ "/" <> s <> p
 addDirToValue :: Path -> InputMap -> DirOrFileName -> Size -> InputMap
 -- need to check if value is in Map already or not. Insert if not
 addDirToValue path m dir size
-  | Map.member path m == True = Map.adjust ([(dir, size)] <>) path m
-  | Map.member path m == False = Map.insert path [(dir, size)] m
+  | Map.member path m = Map.adjust ([(dir, size)] <>) path m
+  | not (Map.member path m) = Map.insert path [(dir, size)] m
   | otherwise = m
 
 itemToMap :: (Path, InputMap) -> StructuredInput -> (Path, InputMap)
